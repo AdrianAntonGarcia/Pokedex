@@ -31,6 +31,7 @@ export const HomeScreen = () => {
                 color: 'black',
                 top: top + 20,
                 marginBottom: top + 20,
+                paddingBottom: 10,
               }}>
               Pokedex
             </Text>
