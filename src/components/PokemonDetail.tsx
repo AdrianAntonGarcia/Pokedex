@@ -65,6 +65,7 @@ export const PokemonDetail = ({pokemon}: Props) => {
           ))}
         </View>
       </View>
+      {/* Movimientos */}
       <View style={{...styles.container}}>
         <Text style={{...styles.title}}>Moves</Text>
         <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
@@ -76,6 +77,30 @@ export const PokemonDetail = ({pokemon}: Props) => {
             </Text>
           ))}
         </View>
+      </View>
+      {/* Stats */}
+      <View style={{...styles.container}}>
+        <Text style={{...styles.title}}>Moves</Text>
+        <View>
+          {pokemon.stats.map(({stat, base_stat}) => (
+            <View style={{flexDirection: 'row'}} key={stat.name}>
+              <Text
+                style={{...styles.regularText, marginRight: 10, width: 150}}>
+                {stat.name}
+              </Text>
+              <Text style={{...styles.regularText, fontWeight: 'bold'}}>
+                {base_stat}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
+      {/* sprite final */}
+      <View style={{marginBottom: 20, alignItems: 'center'}}>
+        <FadeInImage
+          uri={pokemon.sprites.front_default}
+          style={styles.basicSprite}
+        />
       </View>
     </ScrollView>
   );
