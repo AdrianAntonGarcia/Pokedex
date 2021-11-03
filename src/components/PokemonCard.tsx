@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {SimplePokemon} from '../interfaces/pokemonInterfaces';
 import {FadeInImage} from './FadeInImage';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import ImageColors from 'react-native-image-colors';
 import {AndroidImageColors} from 'react-native-image-colors/lib/typescript/types';
 
@@ -21,16 +21,18 @@ interface Props {
 
 export const PokemonCard = ({pokemon}: Props) => {
   const [bgColor, setBgColor] = useState('grey');
+  const isMounted = useRef(true);
   useEffect(() => {
     // Android: dominant
-    getColors();
+    isMounted.current && getColors();
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   const getColors = () => {
     ImageColors.getColors(pokemon.picture, {
       fallback: '#228B22',
-      cache: true,
-      key: 'unique_key',
     }).then(colors => {
       if (colors.platform === 'android') {
         setBgColor(colors.dominant || 'grey');
