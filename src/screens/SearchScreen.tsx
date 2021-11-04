@@ -14,13 +14,26 @@ import {FlatList} from 'react-native';
 import {appStyles} from '../theme/appTheme';
 import {PokemonCard} from '../components/PokemonCard';
 import {Loading} from '../components/Loading';
+import {useState, useEffect} from 'react';
+import {SimplePokemon} from '../interfaces/pokemonInterfaces';
 
 const screenWidth = Dimensions.get('window').width;
 
 export const SearchScreen = () => {
   const {top} = useSafeAreaInsets();
   const {isFetching, simplePokemonList} = usePokemonSearch();
-
+  const [term, setTerm] = useState('Pikachu');
+  const [pokemonFiltered, setPokemonFiltered] = useState<SimplePokemon[]>([]);
+  useEffect(() => {
+    if (term.length === 0) {
+      return setPokemonFiltered([]);
+    }
+    setPokemonFiltered(
+      simplePokemonList.filter(pokemon =>
+        pokemon.name.toLocaleLowerCase().includes(term.toLocaleLowerCase()),
+      ),
+    );
+  }, [term]);
   if (isFetching) {
     return <Loading />;
   }
@@ -32,6 +45,7 @@ export const SearchScreen = () => {
         marginHorizontal: 20,
       }}>
       <SearchInput
+        onDebounce={value => setTerm(value)}
         style={{
           position: 'absolute',
           zIndex: 999,
@@ -40,7 +54,7 @@ export const SearchScreen = () => {
         }}
       />
       <FlatList
-        data={simplePokemonList}
+        data={pokemonFiltered}
         keyExtractor={pokemon => pokemon.id}
         showsVerticalScrollIndicator={false}
         numColumns={2}
@@ -54,7 +68,7 @@ export const SearchScreen = () => {
               paddingBottom: 10,
               marginTop: top + 80,
             }}>
-            Pokedex
+            {term}
           </Text>
         }
         renderItem={({index, item}) => (
