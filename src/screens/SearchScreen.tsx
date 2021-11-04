@@ -28,11 +28,18 @@ export const SearchScreen = () => {
     if (term.length === 0) {
       return setPokemonFiltered([]);
     }
-    setPokemonFiltered(
-      simplePokemonList.filter(pokemon =>
-        pokemon.name.toLocaleLowerCase().includes(term.toLocaleLowerCase()),
-      ),
-    );
+    if (isNaN(Number(term))) {
+      setPokemonFiltered(
+        simplePokemonList.filter(pokemon =>
+          pokemon.name.toLocaleLowerCase().includes(term.toLocaleLowerCase()),
+        ),
+      );
+    } else {
+      const pokemonById = simplePokemonList.find(
+        pokemon => pokemon.id === term,
+      );
+      setPokemonFiltered(pokemonById ? [pokemonById] : []);
+    }
   }, [term]);
   if (isFetching) {
     return <Loading />;
